@@ -10,10 +10,12 @@ body {
     font-family: 'Roboto';
     font-style: normal;
     color: #262837;
+
 }
 
 main {
     width: 100%;
+    
 }
 
 .sidebar {
@@ -98,7 +100,7 @@ li {
 }
 
 li h3,
-li h4, .showOnlyUndode h4{
+li h4, #showOnlyUndode h4{
     display: inline;
 }
 
@@ -150,4 +152,13 @@ li:hover {
 #toDelete:hover{
     background-color: gray;
     background-size: contain;
+}
+.done {
+    display: none;
+}
+ .show-done .done {
+    display: block;
+} 
+#showOnlyUndode {
+    padding-bottom: 20px;
 }

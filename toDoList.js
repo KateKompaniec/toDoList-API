@@ -43,7 +43,7 @@ function isOverdueTask(task) {
 
 
 function templateTask(task) {
-    return `<div class="task">
+    return `<div class="task" >
     <span class="scale" ${  task.done ? "style = \"background: #58AC83; border-radius: 4px 4px 0px 0px; width: 100%; \"" : task.due_date ? (isOverdueTask(task) ? "style = \"background: #E63241; border-radius: 4px 4px 0px 0px; width: 100%;\"" :
     "style = \"background: #D9D9D9;border-radius: 4px 4px 0px 0px; width: 100%;\"") : ""}></span>
     <div class="due_date">
@@ -54,7 +54,7 @@ function templateTask(task) {
       <h3 ${task.done ? "style= \"color: #262837;\" " : task.due_date ? (isOverdueTask(task) ? "style = \"color: #E63241; \"" : "") : ""}>${task.due_date ? getValidDate(task.due_date) : ""}</h3>
     </div>
     <div class="title">
-    <input type="checkbox" ${task.done ? "checked" : ""}>
+    <input type="checkbox" ${task.done ? "checked" : ""} onclick=\"changeState(event)\">
       <h4 ${task.done ? "style =\"color: #878787;  text-decoration: line-through;\"" : "style= \"color: #262837; text-decoration: none;\" "}>${task.title}</h4>
     </div>
     <div class="description">
@@ -66,20 +66,8 @@ function templateTask(task) {
 
 const listOfTasks = document.querySelector('.list_of_tasks')
 
-function printAllTasks(tasks) {
-    listOfTasks.innerHTML = tasks
-        .map((task) => {
-            return `<li id="element_of_list">
-            <button id="toDelete">Delete</button>
-            ${templateTask(task)}`;
-        })
-        .join("");
-
-}
-printAllTasks(tasks)
-
-
-let changeState =(event) => {
+function changeState (event) {
+    event.stopPropagation()
     console.log(event.target, this);
     const currentDivTask=event.target.parentElement.parentElement;
     const currentItems = document.querySelectorAll("#element_of_list")
@@ -93,35 +81,52 @@ let changeState =(event) => {
                 .map((task) => {
                     if (task.title === titleofTask) {
                         task.done = !task.done;
-                        return `<button id="toDelete">Delete</button>
+                        newItem.classList.toggle('done', task.done);
+                        return `<button id="toDelete" onclick="removeTask(event)">Delete</button>
                     ${templateTask(task)}`;
                     }
                 }).join("")
                 currentItem.replaceWith(newItem); 
         }
     })
-    let taskstoChangeNOChecked = document.querySelectorAll("input")
-    taskstoChangeNOChecked.forEach(taskToChangeState => taskToChangeState.addEventListener('change', changeState))
 }
 
-let removeTask =(event) => {
-    console.log(event.target);
+function removeTask (event)  {
+    event.stopPropagation();
+    console.log(event.target,this);
     const btn = event.target
     if (btn.tagName === 'BUTTON') {
         btn.parentElement.remove();
     }
 }
-
-let showUndoneTask = (event)=>{
-    
+function showAllTasks(event){
+    event.stopPropagation();
+    console.log(event.target, this);
+    document.querySelector(".list_of_tasks").classList.toggle("show-done")
 }
+function printAllTasks(tasks) {
+   
+    listOfTasks.innerHTML = tasks
+        .map((task) => {
+        let taskNode = document.createElement('li');
+        taskNode.setAttribute('id', 'element_of_list')
+        taskNode.classList.toggle('done', task.done);
+        taskNode.innerHTML=`<button id="toDelete" onclick="removeTask(event)">Delete</button>
+        ${templateTask(task)}`
+            return `${taskNode.outerHTML}`;
+        })
+        .join("");
+
+
+}
+printAllTasks(tasks)
 
 let tasksToRemove = document.querySelectorAll("#toDelete")
 let taskstoChange = document.querySelectorAll("input")
-let showOnlyUndoneTask = document.querySelector("#showOnlyUndode")
-    
+let AllTasks = document.querySelector("#showAllTasks")
 
-taskstoChange.forEach(taskToChangeState => taskToChangeState.addEventListener('click', changeState))
+//AllTasks.addEventListener('click', showAllTasks)
+//taskstoChange.forEach(taskToChangeState => taskToChangeState.addEventListener('click', changeState))
 tasksToRemove.forEach(task => task.addEventListener('click', removeTask))
-showOnlyUndoneTask.addEventListener()
+
 
