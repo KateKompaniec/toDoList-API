@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="uk">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -27,6 +27,17 @@
             <h4>Загальна дошка в системі, що містить поточні завдання для всіх контракторів </h4>
         </div>
         <div class="list">
+            <div id="addTask">
+                <h2>Додати нову задачу</h2>
+                <div id="contacts"></div>
+                <form name="task">
+                    <input type="text" name="title" placeholder="Назва задачі">
+                    <input type="text" name="description" placeholder="Опис задачі">
+                    <input type="date" name="due_date">
+                    <button type="submit">Додати</button>
+                    <p class="err_empty_title">Обов'язкове поле для заповнення</p>
+                </form>
+            </div>
             <div id="showOnlyUndode">
                 <input id="showAllTasks" type="checkbox" onclick="showAllTasks(event)" >
                   <h4>Показати виконані задачі</h4>

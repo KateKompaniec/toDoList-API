@@ -81,7 +81,7 @@ li p {
 }
 
 .list {
-    padding-top: 58px;
+    padding-top: 38px;
 }
 
 .task div {
@@ -159,6 +159,13 @@ li:hover {
  .show-done .done {
     display: block;
 } 
-#showOnlyUndode {
+#showOnlyUndode, #addTask, #addTask h2{
     padding-bottom: 20px;
+}
+.err_empty_title{
+    opacity: 0;
+    font-size: 10px;
+    font-style: italic;
+    position: absolute;
+    color: red;
 }

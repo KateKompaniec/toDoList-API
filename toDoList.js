@@ -1,5 +1,7 @@
 'use strict';
-const tasks = [
+
+
+let tasks = [
     {
         title: 'Пройти опитування',
         description: 'Пройти опитування за цим посиланням: https://example.com/',
@@ -33,19 +35,20 @@ const tasks = [
 
 
 function getValidDate(date) {
+    date = new Date(date)
     let time = date.toISOString().split("T")[0].split("-").reverse().join(".");
     return time;
 }
 function isOverdueTask(task) {
     let currentDate = new Date(Date.now())
-    return (task.due_date.getDate() < currentDate.getDate()) ? true : false;
+    return (new Date(task.due_date).getDate() < currentDate.getDate()) ? true : false;
 }
 
 
 function templateTask(task) {
     return `<div class="task" >
-    <span class="scale" ${  task.done ? "style = \"background: #58AC83; border-radius: 4px 4px 0px 0px; width: 100%; \"" : task.due_date ? (isOverdueTask(task) ? "style = \"background: #E63241; border-radius: 4px 4px 0px 0px; width: 100%;\"" :
-    "style = \"background: #D9D9D9;border-radius: 4px 4px 0px 0px; width: 100%;\"") : ""}></span>
+    <span class="scale" ${task.done ? "style = \"background: #58AC83; border-radius: 4px 4px 0px 0px; width: 100%; \"" : task.due_date ? (isOverdueTask(task) ? "style = \"background: #E63241; border-radius: 4px 4px 0px 0px; width: 100%;\"" :
+            "style = \"background: #D9D9D9;border-radius: 4px 4px 0px 0px; width: 100%;\"") : ""}></span>
     <div class="due_date">
     ${task.due_date ? `<svg  width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M10.4998 2.33325H3.49984C2.21117 2.33325 1.1665 3.37792 1.1665 4.66659V10.4999C1.1665 11.7886 2.21117 12.8333 3.49984 12.8333H10.4998C11.7885 12.8333 12.8332 11.7886 12.8332 10.4999V4.66659C12.8332 3.37792 11.7885 2.33325 10.4998 2.33325Z" stroke="#878787" stroke-linecap="round" stroke-linejoin="round"/>
@@ -66,15 +69,15 @@ function templateTask(task) {
 
 const listOfTasks = document.querySelector('.list_of_tasks')
 
-function changeState (event) {
+function changeState(event) {
     event.stopPropagation()
     console.log(event.target, this);
-    const currentDivTask=event.target.parentElement.parentElement;
+    const currentDivTask = event.target.parentElement.parentElement;
     const currentItems = document.querySelectorAll("#element_of_list")
-    currentItems.forEach(currentItem=>{
-        const currentDiv=currentItem.querySelector(".task").outerHTML
+    currentItems.forEach(currentItem => {
+        const currentDiv = currentItem.querySelector(".task").outerHTML
         const titleofTask = currentItem.querySelector(".title h4").outerText
-        if(currentDivTask.outerHTML === currentDiv){
+        if (currentDivTask.outerHTML === currentDiv) {
             const newItem = document.createElement('li')
             newItem.setAttribute('id', 'element_of_list')
             newItem.innerHTML = tasks
@@ -86,32 +89,31 @@ function changeState (event) {
                     ${templateTask(task)}`;
                     }
                 }).join("")
-                currentItem.replaceWith(newItem); 
+            currentItem.replaceWith(newItem);
         }
     })
 }
 
-function removeTask (event)  {
+function removeTask(event) {
     event.stopPropagation();
-    console.log(event.target,this);
+    console.log(event.target, this);
     const btn = event.target
     if (btn.tagName === 'BUTTON') {
         btn.parentElement.remove();
     }
 }
-function showAllTasks(event){
+function showAllTasks(event) {
     event.stopPropagation();
     console.log(event.target, this);
     document.querySelector(".list_of_tasks").classList.toggle("show-done")
 }
 function printAllTasks(tasks) {
-   
     listOfTasks.innerHTML = tasks
         .map((task) => {
-        let taskNode = document.createElement('li');
-        taskNode.setAttribute('id', 'element_of_list')
-        taskNode.classList.toggle('done', task.done);
-        taskNode.innerHTML=`<button id="toDelete" onclick="removeTask(event)">Delete</button>
+            let taskNode = document.createElement('li');
+            taskNode.setAttribute('id', 'element_of_list')
+            taskNode.classList.toggle('done', task.done);
+            taskNode.innerHTML = `<button id="toDelete" onclick="removeTask(event)">Delete</button>
         ${templateTask(task)}`
             return `${taskNode.outerHTML}`;
         })
@@ -129,4 +131,28 @@ let AllTasks = document.querySelector("#showAllTasks")
 //taskstoChange.forEach(taskToChangeState => taskToChangeState.addEventListener('click', changeState))
 tasksToRemove.forEach(task => task.addEventListener('click', removeTask))
 
+let taskForm = document.forms["task"]
+const defaultDone = { done: false }
 
+taskForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    let validTitle = document.forms["task"].elements.title;
+    let formData = new FormData(taskForm);
+    console.log(validTitle.value.length);
+    if (validTitle.value.length != 0) {
+        let task = Object.fromEntries(formData.entries())
+        task = Object.assign(task, defaultDone)
+        task.due_date = new Date(task.due_date)
+        console.log(task);
+        tasks.push(task);
+        printAllTasks(tasks);
+        taskForm.reset();
+    }
+    else {
+        let errText = document.querySelector(".err_empty_title");
+        errText.style.opacity = "1";
+        validTitle.style.border = "1px solid red";
+        setTimeout(() => { errText.style.opacity = "0"; validTitle.style.border = "";}, 2000);
+    }
+
+})
