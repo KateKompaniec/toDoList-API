@@ -79,12 +79,12 @@ li p {
 }
 
 .list {
-    padding-top: 68px;
+    padding-top: 58px;
 }
 
-.task {
+.task div {
     padding-left: 20px;
-    position: relative;
+   
 }
 
 li {
@@ -94,10 +94,11 @@ li {
     border-radius: 4px;
     margin-bottom: 20px;
     margin-right: 392px;
+    position: relative;
 }
 
 li h3,
-li h4 {
+li h4, .showOnlyUndode h4{
     display: inline;
 }
 
