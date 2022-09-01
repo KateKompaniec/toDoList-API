@@ -46,6 +46,9 @@ function getValidDate(date) {
 
 }
 function isOverdueTask(task) {
+    if (!task.due_date) { 
+        return false
+    }
     let currentDate = new Date(Date.now())
     return (new Date(task.due_date) < currentDate) ? true : false;
 }
@@ -67,15 +70,15 @@ function templateTask(task) {
         input.setAttribute("checked", "checked");
         taskClone.classList.add("done_task");
         taskClone.classList.remove("undone");
-
     }
-
-    if (task.due_date) {
         if (isOverdueTask(task)) {
             taskClone.classList.add("overdue");
-        }
-    }
-    else dueDate.classList.add("displayDate")
+
+        }  
+    
+     if (!task.due_date){
+        dueDate.classList.add("displayDate")
+     }   
     return taskClone;
 }
 

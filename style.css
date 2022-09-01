@@ -189,6 +189,6 @@ li:hover {
     color: #878787;  
     text-decoration: line-through;
 }
-.due_date .displayDate{
+.due_date.displayDate{
     opacity: 0;
 }
